@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Popup with Visualizer</title>
+    <style>
+        /* Styling untuk popup dan visualizer */
+        #musicPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4cabe8;
+            padding: 20px;
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .bar {
+            width: 5px;
+            margin: 0 1px;
+            backgroulor: #00ff00;
+            background: linear-gradient(to bottom, red 0%, yellow 50%, green 100%);
+            display: inline-block;
+            height: 7px;
+        }
+        #visualizer {
+          
+            background-color: rgba(green);
+        }
+
+        /* Button styling */
+        #openMusicButton {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: yellow;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        #openMusicButton:hover {
+            background-color: #0056b3;
+        }
+
+        /* Close Button */
+        .popup-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: white;
+            cursor: pointer;
+            background-color: red;
+            border-radius: 12px;
+        }
+        css
+body {
+    background-image: url('De.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    backglor: ;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-size: contain; /* Menggunakan contain pada layar kecil agar gambar tidak terpotong */
+    }
+}
+        
+    </style>
+</head>
+<body>
+
+    <!-- Navigasi Musik Button -->
+   <center> <button id="openMusicButton">Open visualizer</button> </center>
+    
+    <!-- Popup untuk musik dan visualizer -->
+    <div id="musicPopup">
+        <span id="closeButton" class="popup-close">-</span>
+        <audio id="audioPlayer" src="music.mp3" preload="auto"></audio>
+        <div id="visualizer">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+      ------------------------------------------
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const closeButton = document.getElementById('closeButton');
+            const musicPopup = document.getElementById('musicPopup');
+            const bars = document.querySelectorAll('.bar');
+            
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audioPlayer);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            analyser.fftSize = 64;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            function updateVisualizer() {
+                analyser.getByteFrequencyData(dataArray);
+                
+                for (let i = 0; i < bars.length; i++) {
+                    const barHeight = dataArray[i] / 2;
+                    bars[i].style.height = barHeight + 'px';
+                }
+                
+                requestAnimationFrame(updateVisualizer);
+            }
+
+            function openMusicPopup() {
+                musicPopup.style.display = 'flex';
+                audioPlayer.play();
+                audioContext.resume().then(() => {
+                    updateVisualizer();
+                });
+            }
+
+            closeButton.addEventListener('click', function() {
+                musicPopup.style.display = 'none';
+                audioPlayer.pause();
+            });
+            const openButton = document.getElementById('openMusicButton');
+            openButton.addEventListener('click', openMusicPopup);
+        });
+    </script>
+</body>
+</html>
