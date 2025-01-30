@@ -82,14 +82,25 @@
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
     </div>
 
     <script>
-        // Membuka popup musik
+               // Membuka popup musik
         document.getElementById("openMusicButton").addEventListener("click", function() {
             document.getElementById("musicPopup").style.display = "block";
             document.getElementById("audioPlayer").play(); // Menjalankan musik
+
+            // Membuat visualizer bergerak
+            startVisualizer();
         });
 
         // Menutup popup
@@ -97,6 +108,34 @@
             document.getElementById("musicPopup").style.display = "none";
             document.getElementById("audioPlayer").pause(); // Pause musik saat popup ditutup
         });
+
+        // Fungsi untuk memulai visualizer
+        function startVisualizer() {
+            const audio = document.getElementById("audioPlayer");
+            const visualizerBars = document.querySelectorAll(".bar");
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            analyser.fftSize = 128;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function updateVisualizer() {
+                analyser.getByteFrequencyData(dataArray);
+
+                for (let i = 0; i < visualizerBars.length; i++) {
+                    let barHeight = dataArray[i] / 2; // Scale the bar height
+                    visualizerBars[i].style.height = barHeight + 'px';
+                }
+
+                requestAnimationFrame(updateVisualizer);
+            }
+
+            updateVisualizer(); // Mulai animasi visualizer
+        }
     </script>
 </body>
 </html>
