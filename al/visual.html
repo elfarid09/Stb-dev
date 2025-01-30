@@ -23,14 +23,13 @@
         .bar {
             width: 5px;
             margin: 0 1px;
-            backgroulor: #00ff00;
             background: linear-gradient(to bottom, red 0%, yellow 50%, green 100%);
             display: inline-block;
             height: 7px;
         }
+
         #visualizer {
-          
-            background-color: rgba(green);
+            background-color: rgba(0, 255, 0, 0.5); /* Adjusted background */
         }
 
         /* Button styling */
@@ -43,7 +42,6 @@
             cursor: pointer;
             font-weight: 700;
         }
-
         #openMusicButton:hover {
             background-color: #0056b3;
         }
@@ -58,16 +56,14 @@
             background-color: red;
             border-radius: 12px;
         }
-        css
-body {
-     
-    background-image: url('https://raw.githubusercontent.com/elfarid09/Stb-dev/main/al/de.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    margin: 0;
-}
-        
+
+        body {
+            background-image: url('https://raw.githubusercontent.com/elfarid09/Stb-dev/main/al/de.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -80,70 +76,26 @@ body {
         <span id="closeButton" class="popup-close">-</span>
         <audio id="audioPlayer" src="lovestory.mp3" preload="auto"></audio>
         <div id="visualizer">
+            <!-- Visualizer bar -->
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-      ------------------------------------------
-            
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const audioPlayer = document.getElementById('audioPlayer');
-            const closeButton = document.getElementById('closeButton');
-            const musicPopup = document.getElementById('musicPopup');
-            const bars = document.querySelectorAll('.bar');
-            
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(audioPlayer);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            analyser.fftSize = 64;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            function updateVisualizer() {
-                analyser.getByteFrequencyData(dataArray);
-                
-                for (let i = 0; i < bars.length; i++) {
-                    const barHeight = dataArray[i] / 2;
-                    bars[i].style.height = barHeight + 'px';
-                }
-                
-                requestAnimationFrame(updateVisualizer);
-            }
+        // Membuka popup musik
+        document.getElementById("openMusicButton").addEventListener("click", function() {
+            document.getElementById("musicPopup").style.display = "block";
+            document.getElementById("audioPlayer").play(); // Menjalankan musik
+        });
 
-            function openMusicPopup() {
-                musicPopup.style.display = 'flex';
-                audioPlayer.play();
-                audioContext.resume().then(() => {
-                    updateVisualizer();
-                });
-            }
-
-            closeButton.addEventListener('click', function() {
-                musicPopup.style.display = 'none';
-                audioPlayer.pause();
-            });
-            const openButton = document.getElementById('openMusicButton');
-            openButton.addEventListener('click', openMusicPopup);
+        // Menutup popup
+        document.getElementById("closeButton").addEventListener("click", function() {
+            document.getElementById("musicPopup").style.display = "none";
+            document.getElementById("audioPlayer").pause(); // Pause musik saat popup ditutup
         });
     </script>
 </body>
