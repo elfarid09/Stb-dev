@@ -2,6 +2,7 @@ import pyautogui as pag
 import time
 import pyperclip
 
+
 # Define the coordinates and use the `actions` list
 actions = [
     (109, 451, 2),  # install
@@ -22,6 +23,7 @@ actions = [
     (163, 182, 2)   # copy
 ]
 
+
 # Wait for a few seconds to give time to focus on the target application
 time.sleep(2)
 
@@ -38,25 +40,32 @@ for x, y, duration in actions:
         text_to_type = "Safelfar1"
         pag.typewrite(text_to_type)
 
+
 # Function to save echo to batch file
 def save_echo_to_batch(file_path, echo_text):
     with open(file_path, 'a') as file:
         file.write(f'\necho {echo_text}\n')
 
+
 # Function to run RustDesk command
 def run_rustdesk_command():
-    time.sleep(1)  # Add delay before getting clipboard data
-    clipboard_text = pyperclip.paste()
-    
-    # Check if clipboard is not empty
-    if clipboard_text.strip():  # Ensure the clipboard contains valid text
-        password_echo = 'Password : Safelfar1'  
-        save_echo_to_batch('show.bat', f'RustDesk ID: {clipboard_text}')
-        save_echo_to_batch('show.bat', password_echo)
-    else:
-        print("Clipboard is empty. ID not found.")
+    # Wait until clipboard contains the RustDesk ID
+    clipboard_text = ''
+    while not clipboard_text.strip():  # Keep checking until clipboard is not empty
+        clipboard_text = pyperclip.paste()  # Get clipboard text
+        time.sleep(0.5)  # Sleep for a short time before checking again
+
+    # Debugging: Print the clipboard text to verify if it is being copied correctly
+    print(f"Clipboard contains: {clipboard_text}")
+
+    password_echo = 'Password : Safelfar1'  
+
+    # Save the ID and password to batch file
+    save_echo_to_batch('show.bat', f'RustDesk ID: {clipboard_text}')
+    save_echo_to_batch('show.bat', password_echo)
+
 
 if __name__ == "__main__":
     run_rustdesk_command()
 
-print("Done , Log in Credintials are below")
+print("Done, Log in credentials are below")
