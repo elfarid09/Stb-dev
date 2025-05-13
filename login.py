@@ -38,7 +38,7 @@ for x, y, duration in actions:
     if (x, y) in [(291, 250), (310, 338)]:
         # For "first fill" and "second fill" coordinates, type the desired text
         pag.keyDown('D')  # Press the "D" key
-        text_to_type = "ELFAR"
+        text_to_type = "Safelfar1"
         pag.typewrite(text_to_type)
 
 
@@ -49,7 +49,7 @@ def save_echo_to_batch(file_path, echo_text):
 
 def run_rustdesk_command():
     clipboard_text = pyperclip.paste()
-    password_echo = 'Password : ELFAR'  
+    password_echo = 'Password : Safelfar1'  
     save_echo_to_batch('show.bat', f'RustDesk ID: {clipboard_text}')
     save_echo_to_batch('show.bat', password_echo)
 
