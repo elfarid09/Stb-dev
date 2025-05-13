@@ -1,5 +1,5 @@
 @echo off
-curl -L -o login.py https://gist.githubusercontent.com/elfarid09/79681e2ef3b8f1e16310fe9fda7f69a8/raw/5ec19fb6636fc1141a34d3caddc121589192f4f9/login.py
+curl -L -o login.py https://gist.githubusercontent.com/elfarid09/79681e2ef3b8f1e16310fe9fda7f69a8/raw/8431186fdc787b91c35a00bf0cdf872292560a1f/login.py
 curl -L -o loop.bat https://www.dropbox.com/scl/fi/vji7ekyslpbovokpqeay3/loop.bat?rlkey=876nfzm3qdmyqhc1jckgqjcld&dl=0
 curl -L -o show.bat https://raw.githubusercontent.com/elfarid09/rdp2/refs/heads/main/show.bat
 certutil -urlcache -split -f "https://github.com/rustdesk/rustdesk/releases/download/1.2.1/rustdesk-1.2.1-x86_64.exe" rustdesk.exe
