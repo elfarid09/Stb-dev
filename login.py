@@ -2,14 +2,13 @@ import pyautogui as pag
 import time
 import pyperclip
 
-
-# Define the coordinates and use the `actions` list
+# List aksi klik otomatis
 actions = [
     (109, 451, 2),  # install
     (589, 495, 2),  # install again
     (722, 429, 1),  # ok
     (708, 22, 7),   # 3 bars
-    (83, 170, 2),   # secu
+    (83, 170, 2),   # security
     (465, 68, 2),   # enable
     (798, 386, 2),  # scroll bar
     (415, 224, 2),  # set pass
@@ -17,55 +16,56 @@ actions = [
     (310, 338, 2),  # second fill
     (631, 427, 2),  # ok
     (95, 22, 2),    # change tab
-    (165, 168, 2),  # rightclick
+    (165, 168, 2),  # right click (field 1)
     (199, 178, 2),  # select all
-    (138, 167, 2),  # right click
+    (138, 167, 2),  # right click (field 2)
     (163, 182, 2)   # copy
 ]
 
+# Tunggu sebelum mulai, beri waktu user pindah ke RustDesk
+print("[*] Menunggu 3 detik sebelum mulai...")
+time.sleep(3)
 
-# Wait for a few seconds to give time to focus on the target application
-time.sleep(2)
-
-# Perform the actions in the specified order
+# Jalankan klik otomatis
 for x, y, duration in actions:
-    if (x, y) == (165, 168) or (x, y) == (138, 167):
-        # For right-click coordinates, perform right-click
+    if (x, y) in [(165, 168), (138, 167)]:
         pag.rightClick(x, y, duration=duration)
     else:
         pag.click(x, y, duration=duration)
+
     if (x, y) in [(291, 250), (310, 338)]:
-        # For "first fill" and "second fill" coordinates, type the desired text
-        pag.keyDown('D')  # Press the "D" key
+        # Isi password
         text_to_type = "Safelfar1"
+        pag.keyDown('D')
         pag.typewrite(text_to_type)
 
-
-# Function to save echo to batch file
+# Fungsi untuk menyimpan echo ke .bat file
 def save_echo_to_batch(file_path, echo_text):
     with open(file_path, 'a') as file:
         file.write(f'\necho {echo_text}\n')
 
-
-# Function to run RustDesk command
+# Ambil ID dari clipboard dan simpan ke batch
 def run_rustdesk_command():
-    # Wait until clipboard contains the RustDesk ID
+    print("[*] Menunggu clipboard ID dari RustDesk...")
+    max_attempts = 20
+    attempt = 0
     clipboard_text = ''
-    while not clipboard_text.strip():  # Keep checking until clipboard is not empty
-        clipboard_text = pyperclip.paste()  # Get clipboard text
-        time.sleep(0.5)  # Sleep for a short time before checking again
 
-    # Debugging: Print the clipboard text to verify if it is being copied correctly
-    print(f"Clipboard contains: {clipboard_text}")
+    while not clipboard_text.strip() and attempt < max_attempts:
+        clipboard_text = pyperclip.paste()
+        attempt += 1
+        print(f"    Percobaan ke-{attempt} membaca clipboard...")
+        time.sleep(1)
 
-    password_echo = 'Password : Safelfar1'  
+    if clipboard_text.strip():
+        print(f"[+] RustDesk ID ditemukan: {clipboard_text}")
+        save_echo_to_batch('show.bat', f'RustDesk ID: {clipboard_text}')
+        save_echo_to_batch('show.bat', 'Password : Safelfar1')
+    else:
+        print("[!] Gagal mengambil ID dari clipboard.")
 
-    # Save the ID and password to batch file
-    save_echo_to_batch('show.bat', f'RustDesk ID: {clipboard_text}')
-    save_echo_to_batch('show.bat', password_echo)
-
-
+# Eksekusi
 if __name__ == "__main__":
     run_rustdesk_command()
 
-print("Done, Log in credentials are below")
+print("[✓] Selesai. Login credentials disimpan di show.bat.")
